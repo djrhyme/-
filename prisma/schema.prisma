@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String        @id @default(uuid())
+  email               String        @unique
+  passwordHash        String
+  nickname            String?
+  // 会员到期时间；为空表示非会员
+  membershipExpiresAt DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  sessions            Session[]
+  verifications       Verification[]
+  bookSettings        BookSetting[]
+  wordStates          WordState[]
+  studyDays           StudyDay[]
+  orders              Order[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  // 只保存会话令牌的 SHA-256，明文令牌仅存在于用户 Cookie 中
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// 邮箱验证码：注册 / 重置密码
+model Verification {
+  id         String    @id @default(uuid())
+  email      String
+  codeHash   String
+  purpose    String
+  userId     String?
+  attempts   Int       @default(0)
+  consumedAt DateTime?
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([email, purpose])
+}
+
+// 每个用户对每本词书的计划与进度汇总
+model BookSetting {
+  id           String   @id @default(uuid())
+  userId       String
+  bookId       String
+  dailyGoal    Int      @default(20)
+  quizMode     String   @default("spelling")
+  // 已生成今日计划的日期，YYYY-MM-DD
+  lastPlanDate String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+}
+
+// 单词记忆状态（简化 SM2 间隔重复）
+model WordState {
+  id           String    @id @default(uuid())
+  userId       String
+  bookId        String
+  word         String
+  // 熟悉度 0-5，答对提升、答错重置
+  familiarity  Int       @default(0)
+  intervalDays Int       @default(0)
+  // 下次复习日期 YYYY-MM-DD，为空表示已掌握无需复习
+  nextReviewAt String?
+  lastReviewAt DateTime?
+  wrongCount   Int       @default(0)
+  isWrong      Boolean   @default(false)
+  learnedAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId, word])
+  @@index([userId, bookId, nextReviewAt])
+  @@index([userId, bookId, isWrong])
+}
+
+// 每日学习流水，用于统计面板与连续打卡
+model StudyDay {
+  id           String   @id @default(uuid())
+  userId       String
+  date         String
+  newCount     Int      @default(0)
+  reviewCount  Int      @default(0)
+  correctCount Int      @default(0)
+  wrongCount   Int      @default(0)
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
+
+model Order {
+  id          String    @id @default(uuid())
+  orderNo     String    @unique
+  userId      String
+  plan        String
+  months      Int
+  amountCents Int
+  provider    String    @default("alipay")
+  status      String    @default("pending")
+  tradeNo     String?
+  paidAt      DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}

@@ -1,0 +1,5 @@
+# 统一使用 LF：Dockerfile、shell 与 Nginx 配置带 CRLF 会导致容器内执行失败
+* text=auto eol=lf
+*.ico binary
+*.png binary
+*.jpg binary

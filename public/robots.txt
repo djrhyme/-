@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /$
+Allow: /privacy
+Allow: /disclaimer
+Allow: /copyright
+Allow: /books
+Disallow: /study
+Disallow: /mistakes
+Disallow: /me
+Disallow: /membership
+Disallow: /login
+Disallow: /register
+Disallow: /forgot
+Disallow: /api

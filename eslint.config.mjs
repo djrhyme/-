@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      ".sites-starter-backup/**",
+      "vendor-bin/**",
     ],
   },
 ];

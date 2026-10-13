@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-paper: #f6f3ec;
+  --color-paper-deep: #ece5d8;
+  --color-card: #fffefb;
+  --color-ink: #17211c;
+  --color-ink-soft: #4c5a53;
+  --color-ink-faint: #8c968e;
+  --color-rule: #ded5c4;
+  --color-moss: #1f5c46;
+  --color-moss-dark: #16452f;
+  --color-moss-soft: #e7efe9;
+  --color-clay: #b75c37;
+  --color-clay-soft: #f7e9e1;
+  --color-correct: #2c7a52;
+  --color-wrong: #b23a3a;
+
+  --font-display: Georgia, "Times New Roman", "Songti SC", "STSong", "SimSun", serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+
+  --radius-card: 4px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--color-paper);
+    /* 细网格纸张纹理，呼应练习本 */
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--color-rule) 45%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-rule) 45%, transparent) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  ::selection {
+    background: var(--color-moss);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-moss);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .word-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  .surface {
+    background: var(--color-card);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-card);
+    box-shadow: 0 1px 2px rgba(23, 33, 28, 0.05), 0 8px 24px -20px rgba(23, 33, 28, 0.35);
+  }
+
+  .rule-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-pop {
+  animation: pop-in 220ms ease-out;
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide {
+  animation: slide-in 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop,
+  .animate-slide {
+    animation: none;
+  }
 }

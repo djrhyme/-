@@ -1,0 +1,45 @@
+{
+  "generatedFrom": "ECDICT (MIT License, Copyright (c) 2025 Linwei) https://github.com/skywind3000/ECDICT",
+  "books": [
+    {
+      "id": "primary",
+      "name": "小学基础词",
+      "count": 600
+    },
+    {
+      "id": "junior",
+      "name": "中考英语词",
+      "count": 1528
+    },
+    {
+      "id": "senior",
+      "name": "高考英语词",
+      "count": 3596
+    },
+    {
+      "id": "cet4",
+      "name": "大学英语四级",
+      "count": 3800
+    },
+    {
+      "id": "cet6",
+      "name": "大学英语六级",
+      "count": 5376
+    },
+    {
+      "id": "tem8",
+      "name": "高阶词汇（专业八级水平）",
+      "count": 6000
+    },
+    {
+      "id": "ielts",
+      "name": "雅思词汇",
+      "count": 4989
+    },
+    {
+      "id": "toefl",
+      "name": "托福词汇",
+      "count": 6900
+    }
+  ]
+}
